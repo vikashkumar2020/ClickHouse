@@ -21,7 +21,7 @@ $CLICKHOUSE_CLIENT --query "SELECT current_size > 0 FROM system.filesystem_cache
 config_path=${CLICKHOUSE_CONFIG_DIR}/config.d/storage_conf.xml
 
 new_max_size=$($CLICKHOUSE_CLIENT --query "SELECT divide(max_size, 2) FROM system.filesystem_cache_settings WHERE cache_name = '$disk_name'")
-sed -i "s|<max_size>$prev_max_size<\/max_size>|<max_size>$new_max_size<\/max_size>|"  $config_path
+sed -i "s|<max_size>$prev_max_size<\/max_size>|<max_size>$new_max_size<\/max_size>|" $config_path
 
 # echo $prev_max_size
 # echo $new_max_size
@@ -34,7 +34,7 @@ $CLICKHOUSE_CLIENT --query "SELECT max_size == $new_max_size FROM system.filesys
 $CLICKHOUSE_CLIENT --query "SELECT current_size > 0 FROM system.filesystem_cache_settings WHERE cache_name = '$disk_name' FORMAT TabSeparated"
 $CLICKHOUSE_CLIENT --query "SELECT current_size <= max_size FROM system.filesystem_cache_settings WHERE cache_name = '$disk_name' FORMAT TabSeparated"
 
-sed -i "s|<max_size>$new_max_size<\/max_size>|<max_size>$prev_max_size<\/max_size>|"  $config_path
+sed -i "s|<max_size>$new_max_size<\/max_size>|<max_size>$prev_max_size<\/max_size>|" $config_path
 
 $CLICKHOUSE_CLIENT -m --query "
 set send_logs_level='fatal';
